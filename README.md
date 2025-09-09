@@ -57,10 +57,7 @@ removeStateStore("data", "nextKey");
 ----
 **Notes**
 
-Every state update includes an updatedAt timestamp.
-
-The store works with any object structure, making it flexible for various use cases.
-
-Lightweight and minimal — no context providers or extra boilerplate required.
-
-Ideal for managing small to medium app state where a full state library would be overkill.
+- Every state update includes an updatedAt timestamp.
+- The store works with any object structure, making it flexible for various use cases.
+- Lightweight and minimal — no context providers or extra boilerplate required.
+- Ideal for managing small to medium app state where a full state library would be overkill.
