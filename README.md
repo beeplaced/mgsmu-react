@@ -4,16 +4,21 @@
 - It provides a simple **publish-subscribe (pub-sub)** mechanism to manage global state without external libraries like Redux or Zustand.  
 - Components can subscribe to specific keys and automatically re-render when those keys change.
 
+## install
+```
+npm install --save mgsmu-react
+```
+
 ## Import in any component
 
-```ts
-import { useStateStore, removeStateStore } from '../UseStore';
+```jsx
+import { useStateStore, removeStateStore } from 'mgsmu-react';
 ```
 - useStateStore() – React hook to access the global state and subscribe to changes.
 - removeStateStore(key) – Removes a key from the global store.
 
 ## Invoke state
-```ts
+```jsx
 const key = "data";
 const [data, setData] = useStateStore(key);
 ```
@@ -21,7 +26,7 @@ const [data, setData] = useStateStore(key);
 
 ## Set data and key
 
-```ts
+```jsx
 const data = { specifics: "data", state: true, what: "next" };
 setData(data)
 ```
@@ -32,14 +37,14 @@ setData(data)
 
 ## Listen and catch changes
 
-```ts
+```jsx
 useEffect(() => {
     if (!data) return;
     console.log(data);
   },[data])
 ```
 
-```log
+```jsx
 logs: {
     "specifics": "data",
     "state": true,
@@ -53,7 +58,7 @@ logs: {
 
 ## Remove keys
 
-```ts
+```jsx
 removeStateStore("data", "nextKey");
 ```
 
