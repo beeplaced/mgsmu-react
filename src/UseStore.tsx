@@ -13,37 +13,42 @@ export const getState = () => state;
 export const setStateStore = (entry: any, key: string = "data") => {
   state = {
     ...state,
-    [key]: entry,            // update the key
-    updatedAt: Date.now(),   // global timestamp
+    [key]: {
+      ...entry,
+      updatedAt: Date.now(),
+    }
   };
   listeners.forEach((listener) => listener());
 };
 
 // Create a new state without the specified keys
-export const removeStateStore = (...keys: string[]) => { 
+export const removeStateStore = (...keys: string[]) => {
   const newState = { ...state };
   keys.forEach((key) => {
-    delete newState[key];
+    delete newState[key]; // remove the key
   });
 
-  state = { ...newState, updatedAt: Date.now() }; // optional timestamp
+  state = {
+    ...newState,
+    updatedAt: Date.now(), // global timestamp after removal
+  };
   listeners.forEach((listener) => listener());
 };
 
-export const subscribe = (listener: () => void) => {
+export const subscribeKey = (key: string, listener: () => void) => {
   listeners.add(listener);
   return () => {
     listeners.delete(listener);
   };
 };
 
-export const useStateStore = () => {
-  const [localState, setLocalState] = useState(state);
+export const useStateStore = (key: string) => {
+  const [value, setValue] = useState(state[key]);
 
   useEffect(() => {
-    const update = () => setLocalState({ ...state });
-    return subscribe(update);
-  }, []);
+    const update = () => setValue(state[key]);
+    return subscribeKey(key, update);
+  }, [key]);
 
-  return [localState, setStateStore, removeStateStore] as const;
+  return [value, (v: any) => setStateStore(v, key), removeStateStore] as const;
 };
