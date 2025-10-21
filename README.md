@@ -12,17 +12,17 @@ npm install --save mgsmu-react
 ## Import in any component
 
 ```jsx
-import { useStateStore, removeStateStore } from 'mgsmu-react';
+import { useStateStore } from 'mgsmu-react';
 ```
 - useStateStore() – React hook to access the global state and subscribe to changes.
-- removeStateStore(key) – Removes a key from the global store.
 
 ## Invoke state
 ```jsx
 const key = "data";
-const [data, setData] = useStateStore(key);
+const [data, setData, removeData] = useStateStore(key);
 ```
-- Parameter names are flexible (data and setData are just examples).
+- Parameter names are flexible (data, setData and removeData are just examples).
+- keys can be used as you like. You can create as many keys as you like for different scenarios
 
 ## Set data and key
 
@@ -40,7 +40,7 @@ setData(data)
 ```jsx
 useEffect(() => {
     if (!data) return;
-    console.log(data);
+    console.log(data); //use Data
   },[data])
 ```
 
@@ -59,12 +59,11 @@ logs: {
 ## Remove keys
 
 ```jsx
-removeStateStore("data", "nextKey");
+removeData("data");
 ```
-
 - Deletes a key from the global state.
-- Triggers re-render for components subscribed to that key.
-- Useful for cleaning up or resetting parts of your state dynamically.
+- Make sure component is clean if rendered again
+- Note: Triggers re-render for components subscribed to that key.
 
 ----
 **Notes**
