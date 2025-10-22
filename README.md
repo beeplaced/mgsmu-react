@@ -1,6 +1,6 @@
-# MGSMU - Minimal Global State Management Utility
+# mgsmu-react - Minimal Global State Management Utility
 
-- MGSMU is a lightweight global state management utility for React.  
+- mgsmu-react is a lightweight global state management utility for React.  
 - It provides a simple **publish-subscribe (pub-sub)** mechanism to manage global state without external libraries like Redux or Zustand.  
 - Components can subscribe to specific keys and automatically re-render when those keys change.
 
@@ -72,3 +72,16 @@ removeData("data");
 - The store works with any object structure, making it flexible for various use cases.
 - Lightweight and minimal — no context providers or extra boilerplate required.
 - Ideal for managing small to medium app state where a full state library would be overkill.
+
+----
+# Changelog
+
+All notable changes to this project will be documented in this file.
+
+---
+
+## [1.0.3] - 2025-10-22
+### Fixed
+- Optimized listener notifications:
+  - Only listeners subscribed to a changed or removed key are notified.
+  - Previously, all listeners were notified on every state change.

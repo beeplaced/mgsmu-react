@@ -1,54 +1,60 @@
 import { useEffect, useState } from 'react';
 
-// Global state
-let state: Record<string, any> = {};
+type StateEntry = {
+  [key: string]: any;
+  updatedAt?: number;
+};
 
-// Listeners
-const listeners = new Set<() => void>();
+type State = {
+  [key: string]: StateEntry | number; // allow `updatedAt` as number
+};
 
-// Get current state
-export const getState = () => state;
+let state: State = {};
+const listeners: Map<string, Set<() => void>> = new Map();
 
-// Set a specific key in state with timestamp
-export const setStateStore = (entry: any, key: string = "data") => {
+// Get the full state
+export const getState = (): State => state;
+
+// Set or update a specific key in the state
+export const setStateStore = (entry: StateEntry, key: string = "data"): void => {
   state = {
     ...state,
     [key]: {
       ...entry,
       updatedAt: Date.now(),
-    }
+    },
   };
-  listeners.forEach((listener) => listener());
+  listeners.get(key)?.forEach((listener) => listener());
 };
 
-// Create a new state without the specified keys
-export const removeStateStore = (...keys: string[]) => {
-  const newState = { ...state };
+// Remove one or multiple keys from the state
+export const removeStateStore = (...keys: string[]): void => {
+  const newState: State = { ...state };
   keys.forEach((key) => {
-    delete newState[key]; // remove the key
+    delete newState[key];
   });
-
-  state = {
-    ...newState,
-    updatedAt: Date.now(), // global timestamp after removal
-  };
-  listeners.forEach((listener) => listener());
+  state = { ...newState, updatedAt: Date.now() };
+  listeners.forEach((set) => set.forEach((listener) => listener()));
 };
 
-export const subscribeKey = (key: string, listener: () => void) => {
-  listeners.add(listener);
-  return () => {
-    listeners.delete(listener);
-  };
+// Subscribe to changes on a specific key
+export const subscribeKey = (key: string, listener: () => void): (() => void) => {
+  if (!listeners.has(key)) listeners.set(key, new Set());
+  listeners.get(key)!.add(listener);
+  return () => listeners.get(key)!.delete(listener);
 };
 
-export const useStateStore = (key: string) => {
-  const [value, setValue] = useState(state[key]);
+// React hook to use the state
+export const useStateStore = (key: string): [any, (v: any) => void, (...keys: string[]) => void] => {
+  const [value, setValue] = useState<any>(state[key]);
 
   useEffect(() => {
     const update = () => setValue(state[key]);
-    return subscribeKey(key, update);
+    const unsubscribe = subscribeKey(key, update);
+    return () => {
+      unsubscribe();
+    };
   }, [key]);
 
-  return [value, (v: any) => setStateStore(v, key), removeStateStore] as const;
+  return [value, (v: any) => setStateStore(v, key), removeStateStore];
 };
