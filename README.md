@@ -80,6 +80,11 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## [1.0.4] - 2027-10-22
+### Fixed
+- Added UseClickSetter
+  - Only Clicking purpose
+
 ## [1.0.3] - 2025-10-22
 ### Fixed
 - Optimized listener notifications:

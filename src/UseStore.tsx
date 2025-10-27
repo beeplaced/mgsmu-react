@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 
 type StateEntry = {
   [key: string]: any;
@@ -57,4 +57,12 @@ export const useStateStore = (key: string): [any, (v: any) => void, (...keys: st
   }, [key]);
 
   return [value, (v: any) => setStateStore(v, key), removeStateStore];
+};
+
+// --- New click-only setter hook (write-only) ---
+
+export const useClickSetter = (key: string) => {
+  return useCallback((value: any) => {
+    setStateStore(value, key);
+  }, [key]);
 };
