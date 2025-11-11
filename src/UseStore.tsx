@@ -56,7 +56,12 @@ export const useStateStore = (key: string): [any, (v: any) => void, (...keys: st
     };
   }, [key]);
 
-  return [value, (v: any) => setStateStore(v, key), removeStateStore];
+    const setGlobalValue = (v: any | ((prev: any) => any)) => {
+    const newValue = typeof v === "function" ? v(state[key]) : v;
+    setStateStore(newValue, key);
+  };
+
+  return [value, setGlobalValue, removeStateStore];
 };
 
 // --- New click-only setter hook (write-only) ---

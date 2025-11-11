@@ -29,8 +29,10 @@ const [data, setData, removeData] = useStateStore(key);
 ```jsx
 const data = { specifics: "data", state: true, what: "next" };
 setData(data)
-```
 
+// Functional Update 1.0.5
+setData(prev => ({ ...prev, added: "new" }));
+```
 - Key: any string can be used ("data", "users", "messages", etc.)
 - Data: any object or array can be stored under that key.
 - Allows management of multiple independent keys in your global state
@@ -80,8 +82,13 @@ All notable changes to this project will be documented in this file.
 
 ---
 
-## [1.0.4] - 2027-10-22
+
+## [1.0.5] - 2027-11-11
 ### Fixed
+- Setter now supports functional update (like React’s setState)
+
+## [1.0.4] - 2027-10-22
+### Added
 - Added UseClickSetter
   - Only Clicking purpose
 
